@@ -6,6 +6,7 @@ import 'package:reminder_app/bloc/reminder_event.dart';
 import 'package:reminder_app/bloc/reminder_state.dart';
 import 'package:reminder_app/models/reminder.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:reminder_app/screens/edit_reminder_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   final TextEditingController _titleController = TextEditingController();
@@ -137,11 +138,27 @@ class HomeScreen extends StatelessWidget {
                   child: ListTile(
                     title: Text(reminder.title),
                     subtitle: Text(DateFormat.yMd().add_jm().format(reminder.dateTime)),
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () {
-                        context.read<ReminderBloc>().add(RemoveReminder(index));
-                      },
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditReminderScreen(reminder: reminder, index: index),
+                              ),
+                            );
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () {
+                            context.read<ReminderBloc>().add(RemoveReminder(index));
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 );
@@ -154,3 +171,4 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+

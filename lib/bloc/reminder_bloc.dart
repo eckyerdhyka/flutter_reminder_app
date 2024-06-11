@@ -11,6 +11,7 @@ class ReminderBloc extends Bloc<ReminderEvent, ReminderState> {
 
   ReminderBloc(this.box) : super(ReminderInitial()) {
     on<AddReminder>(_onAddReminder);
+    on<UpdateReminder>(_onUpdateReminder);
     on<RemoveReminder>(_onRemoveReminder);
     _loadReminders();
   }
@@ -34,6 +35,16 @@ class ReminderBloc extends Bloc<ReminderEvent, ReminderState> {
     box.deleteAt(event.index);
     if (!kIsWeb) {
       NotificationService().cancelNotification(event.index);
+    }
+    final reminders = box.values.cast<Reminder>().toList();
+    emit(ReminderLoaded(reminders));
+  }
+
+  void _onUpdateReminder(UpdateReminder event, Emitter<ReminderState> emit) {
+    final updatedReminder = Reminder(event.title, event.dateTime);
+    box.putAt(event.id, updatedReminder);
+    if (!kIsWeb) {
+      NotificationService().scheduleNotification(event.id, event.title, 'Reminder', event.dateTime);
     }
     final reminders = box.values.cast<Reminder>().toList();
     emit(ReminderLoaded(reminders));

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:reminder_app/models/reminder.dart';
 
 abstract class ReminderEvent extends Equatable {
   const ReminderEvent();
@@ -16,6 +17,18 @@ class AddReminder extends ReminderEvent {
   @override
   List<Object> get props => [title, dateTime];
 }
+
+class UpdateReminder extends ReminderEvent {
+  final int id;
+  final String title;
+  final DateTime dateTime;
+  
+  const UpdateReminder(this.id,this.title, this.dateTime);
+
+  @override
+  List<Object> get props => [id,title, dateTime];
+}
+
 
 class RemoveReminder extends ReminderEvent {
   final int index;
